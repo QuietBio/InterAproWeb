@@ -262,61 +262,79 @@
     <tbody>
         @foreach (var item in Model.RejectedRequests)
         {
-            <tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestAmount)
+            </td>
+
+            @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Buyer"))
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.RequestDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RequestAmount)
+                    @UserManager.FindByIdAsync(item.ManagerId).Result.FullName
                 </td>
 
-                @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Buyer"))
+                @if (item.FinanceId != null)
                 {
                     <td>
-                        @UserManager.FindByIdAsync(item.ManagerId).Result.FullName
+                        @UserManager.FindByIdAsync(item.FinanceId).Result.FullName
                     </td>
-                    
-                        <td>
-                            @UserManager.FindByIdAsync(item.FinanceId).Result.FullName
-                        </td>
-
-
                 }
-                @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Manager"))
+                else
                 {
                     <td>
-                        @UserManager.FindByIdAsync(item.BuyerId).Result.FullName
+                        &nbsp;
                     </td>
-
-                   
-                        <td>
-                            @UserManager.FindByIdAsync(item.FinanceId).Result.FullName
-                        </td>
-
- 
                 }
-                @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Finance"))
+
+
+            }
+            @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Manager"))
+            {
+                <td>
+                    @UserManager.FindByIdAsync(item.BuyerId).Result.FullName
+                </td>
+
+
+                @if (item.FinanceId != null)
                 {
                     <td>
-                        @UserManager.FindByIdAsync(item.BuyerId).Result.FullName
-                    </td>
-                    <td>
-                        @UserManager.FindByIdAsync(item.ManagerId).Result.FullName
+                        @UserManager.FindByIdAsync(item.FinanceId).Result.FullName
                     </td>
                 }
+                else
+                {
+                    <td>
+                        &nbsp;
+                    </td>
+                }
+
+
+            }
+            @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Finance"))
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.RequestStatus.Description)
+                    @UserManager.FindByIdAsync(item.BuyerId).Result.FullName
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Created)
+                    @UserManager.FindByIdAsync(item.ManagerId).Result.FullName
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.RequestId">Details</a> 
-                </td>
-            </tr>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestStatus.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Updated)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.RequestId">Details</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

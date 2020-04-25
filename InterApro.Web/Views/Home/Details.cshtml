@@ -82,7 +82,7 @@
             <a asp-action="Reject" asp-route-id="@Model.RequestId" class="btn btn-danger">Reject Request</a> <span> | </span>
         }
     }
-    else if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Buyer"))
+    else if (!await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Buyer"))
     {
         if (Model.RequestStatusId == 3)
         {
